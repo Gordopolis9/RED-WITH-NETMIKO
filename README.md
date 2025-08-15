@@ -9,6 +9,64 @@
 | Red remota   | 10.10.17.64/30   | 255.255.255.252  | 10.10.17.65 – 10.10.17.66 | 10.10.17.67         | 2            | 10.10.17.65(R1) - 66(R2)       | 
 | Rango libre  | 10.10.17.68-255  | -                | -                         | -                   | -            | -                  | 
 
+## Configuración de Routers
+
+### R1 - RouterLOCAL
+
+```shell
+# Crear VLAN Gestión en ether2
+/interface vlan
+add name=VLAN_GESTION vlan-id=1799 interface=ether2
+
+# Crear VLAN Gestión-P2P en ether3
+/interface vlan
+add name=VLAN_GESTION-P2P vlan-id=1799 interface=ether3
+
+# Direcciones IP
+/ip address
+add address=10.10.17.59/29 interface=VLAN_GESTION
+add address=10.10.17.65/30 interface=VLAN_GESTION-P2P
+
+# Bridges
+/interface bridge
+add name=BRIDGE_GESTION vlan-filtering=yes
+
+/interface bridge port
+add bridge=BRIDGE_GESTION interface=VLAN_GESTION
+add bridge=BRIDGE_GESTION interface=VLAN_GESTION-P2P
+
+# Configuración de NAT para salida a Internet
+/ip firewall nat
+add chain=srcnat out-interface=ether1 action=masquerade
+```
+
+---
+
+### R2 - RouterREMOTO
+
+```shell
+# Crear VLAN Gestión en ether2
+/interface vlan
+add name=VLAN_GESTION vlan-id=1799 interface=ether2
+
+# Crear VLAN Gestión-P2P en ether3
+/interface vlan
+add name=VLAN_GESTION-P2P vlan-id=1799 interface=ether3
+
+# Direcciones IP
+/ip address
+add address=10.10.17.66/30 interface=VLAN_GESTION-P2P
+
+# Bridges
+/interface bridge
+add name=BRIDGE_GESTION vlan-filtering=yes
+
+/interface bridge port
+add bridge=BRIDGE_GESTION interface=VLAN_GESTION
+add bridge=BRIDGE_GESTION interface=VLAN_GESTION-P2P
+```
+
+
 # Configuración de Switches SW1 y SW2
 
 ## SW1 - SwitchLOCAL
