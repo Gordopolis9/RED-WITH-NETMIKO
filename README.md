@@ -8,3 +8,149 @@
 | Gestión (1799)| 10.10.17.56/29   | 255.255.255.248  | 10.10.17.57 – 10.10.17.62 | 10.10.17.63         | 6            | 10.10.17.57        | 
 | Red remota   | 10.10.17.64/30   | 255.255.255.252  | 10.10.17.65 – 10.10.17.66 | 10.10.17.67         | 2            | 10.10.17.65(R1) - 66(R2)       | 
 | Rango libre  | 10.10.17.68-255  | -                | -                         | -                   | -            | -                  | 
+
+
+# Configuración completa de la PC SYSADMIN en Debian 12 (PNETLab)
+
+Este documento guía paso a paso cómo preparar una PC Debian 12 en entorno PNETLab para ejecutar scripts de automatización con Python y Netmiko.
+
+---
+
+## 1. Verificar interfaz de red activa
+
+Usá este comando para ver qué interfaz tenés disponible:
+
+```bash
+ip a
+```
+
+Ignorá la interfaz `lo`. La que identifiques será la que uses para configurar tu IP.
+
+![ConfiguraciónIP](Images/IP-Debian12.png)
+---
+
+## 2. Asignar IP estática y ruta por defecto
+
+Ejecutar los siguientes comandos (reemplazá `enp0s3` si tu interfaz tiene otro nombre):
+
+```bash
+sudo ip addr add 10.10.17.57/29 dev enp0s3
+sudo ip link set enp0s3 up
+sudo ip route add default via 10.10.17.59
+```
+
+- `10.10.17.57/29` → IP de tu PC SYSADMIN  
+- `10.10.17.59` → IP del MikroTik que actúa como gateway
+
+---
+
+## 3. Verificar conectividad
+
+Probar comunicación con la puerta de enlace, una IP pública y un dominio:
+
+```bash
+ping 10.10.17.59     # MikroTik
+ping 8.8.8.8           # IP pública (Google)
+ping google.com        # DNS
+```
+
+Si falla la resolución de nombres, configurar DNS:
+
+```bash
+sudo nano /etc/resolv.conf
+```
+
+Agregar:
+
+```
+nameserver 8.8.8.8
+nameserver 1.1.1.1
+```
+
+---
+
+## 4. Instalar Python y pip
+
+Actualizar repositorios e instalar:
+
+```bash
+sudo apt update
+sudo apt install python3 python3-pip
+```
+
+Verificar versiones:
+
+```bash
+python3 --version
+pip3 --version
+```
+
+---
+
+## 5. Instalar Netmiko
+
+Instalar el módulo para conexiones SSH en red:
+
+```bash
+pip3 install netmiko
+```
+
+> Esto también instalará Paramiko para conexiones SSH.
+
+---
+
+## 6. Instalar wget (opcional)
+
+Si no está instalado, hacerlo con:
+
+```bash
+sudo apt install wget
+```
+
+---
+
+## 7. Descargar el script desde GitHub
+
+Usar `wget` para obtener el archivo en formato RAW:
+
+```bash
+wget https://raw.githubusercontent.com/Gordopolis9/RED-WITH-NETMIKO/master/test_netmiko_connect.py
+```
+
+**Cómo obtener el enlace RAW:**
+
+1. Abrir el archivo en GitHub.  
+2. Clic en "Raw".  
+3. Copiar la URL del navegador.
+
+---
+
+## 8. Ejecutar el script
+
+Ejecutar el archivo Python:
+
+```bash
+python3 test_netmiko_connect.py
+```
+
+> Este script se conecta por SSH a tus routers y switches para ejecutar comandos de prueba.
+
+---
+
+## Extras útiles
+
+Ver contenido del script:
+
+```bash
+cat test_netmiko_connect.py
+```
+
+Editar el script:
+
+```bash
+nano test_netmiko_connect.py
+```
+
+---
+
+Con esto, tu PC SYSADMIN queda lista para automatizar configuraciones de red con Python y Netmiko.
