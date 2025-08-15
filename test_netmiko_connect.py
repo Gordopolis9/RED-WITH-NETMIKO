@@ -61,8 +61,12 @@ def main():
             continue
 
         device = devices[int(choice) - 1]
+
+        # Filtrar solo los parámetros que acepta ConnectHandler
+        connect_params = {k: v for k, v in device.items() if k in ['device_type', 'host', 'username', 'password', 'secret', 'port']}
+
         print(f"\n🔗 Conectando a {device['name']} ({device['host']})...")
-        net_connect = ConnectHandler(**device)
+        net_connect = ConnectHandler(**connect_params)
         if device['device_type'] == 'cisco_ios':
             net_connect.enable()
         output = net_connect.send_command(commands[device['device_type']])
