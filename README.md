@@ -9,12 +9,66 @@
 | Red remota   | 10.10.17.64/30   | 255.255.255.252  | 10.10.17.65 – 10.10.17.66 | 10.10.17.67         | 2            | 10.10.17.65(R1) - 66(R2)       | 
 | Rango libre  | 10.10.17.68-255  | -                | -                         | -                   | -            | -                  | 
 
+# Configuración de Switches SW1 y SW2
+
+## SW1 - SwitchLOCAL
+
+
+**Configuración:**
+```plaintext
+conf t
+!
+hostname SwitchLOCAL
+!
+vlan 1799
+ name VLAN_GESTION
+exit
+!
+interface ethernet0/0
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 1799
+exit
+!
+interface ethernet1/0
+ switchport mode access
+ switchport access vlan 1799
+exit
+!
+do wr
+```
+
+---
+
+## SW2 - SwitchREMOTO
+
+**Configuración:**
+```plaintext
+conf t
+!
+hostname SwitchREMOTO
+!
+vlan 1799
+ name VLAN_GESTION
+exit
+!
+interface ethernet0/0
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk allowed vlan 1799
+exit
+!
+interface ethernet1/0
+ switchport mode access
+ switchport access vlan 1799
+exit
+!
+do wr
+```
+
 
 # Configuración completa de la PC SYSADMIN en Debian 12 (PNETLab)
 
-Este documento guía paso a paso cómo preparar una PC Debian 12 en entorno PNETLab para ejecutar scripts de automatización con Python y Netmiko.
-
----
 
 ## 1. Verificar interfaz de red activa
 
