@@ -20,20 +20,20 @@ Se detallan las asignaciones de IP por dispositivo, las configuraciones aplicada
 ### R1 - RouterLOCAL
 
 ```shell
-# Crear VLAN Gestión en ether2
+# === Crear VLAN Gestión en ether2 (conecta al switch local) ===
 /interface vlan
 add name=VLAN_GESTION vlan-id=1799 interface=ether2
 
-# Crear VLAN Gestión-P2P en ether3
+# === Crear VLAN Gestión-P2P en ether3 (enlace punto a punto hacia R2) ===
 /interface vlan
 add name=VLAN_GESTION-P2P vlan-id=1799 interface=ether3
 
-# Direcciones IP
+# === Asignar direcciones IP a las interfaces de gestión y P2P ===
 /ip address
 add address=10.10.17.59/29 interface=VLAN_GESTION
 add address=10.10.17.65/30 interface=VLAN_GESTION-P2P
 
-# Bridges
+# === Crear un bridge para agrupar las interfaces de gestión ===
 /interface bridge
 add name=BRIDGE_GESTION vlan-filtering=yes
 
@@ -41,7 +41,7 @@ add name=BRIDGE_GESTION vlan-filtering=yes
 add bridge=BRIDGE_GESTION interface=VLAN_GESTION
 add bridge=BRIDGE_GESTION interface=VLAN_GESTION-P2P
 
-# Configuración de NAT para salida a Internet
+# === Configurar NAT para que la red de gestión tenga salida a Internet ===
 /ip firewall nat
 add chain=srcnat out-interface=ether1 action=masquerade
 ```
@@ -51,19 +51,19 @@ add chain=srcnat out-interface=ether1 action=masquerade
 ### R2 - RouterREMOTO
 
 ```shell
-# Crear VLAN Gestión en ether2
+# === Crear VLAN Gestión en ether2 (conecta al switch remoto) ===
 /interface vlan
 add name=VLAN_GESTION vlan-id=1799 interface=ether2
 
-# Crear VLAN Gestión-P2P en ether3
+# === Crear VLAN Gestión-P2P en ether3 (enlace P2P hacia R1) ===
 /interface vlan
 add name=VLAN_GESTION-P2P vlan-id=1799 interface=ether3
 
-# Direcciones IP
+# === Asignar IP a la interfaz del enlace ===
 /ip address
 add address=10.10.17.66/30 interface=VLAN_GESTION-P2P
 
-# Bridges
+# === Crear bridge para unificar interfaces de gestión ===
 /interface bridge
 add name=BRIDGE_GESTION vlan-filtering=yes
 
@@ -82,43 +82,43 @@ add bridge=BRIDGE_GESTION interface=VLAN_GESTION-P2P
 ```plaintext
 conf t
 !
-hostname SwitchLOCAL
+hostname SwitchLOCAL                      # === Cambia el nombre del dispositivo ===
 !
-vlan 1799
+vlan 1799                                 # === Crea VLAN de gestión ===
  name VLAN_GESTION
 exit
 !
-interface vlan 1799
- ip address 10.10.17.58 255.255.255.248
+interface vlan 1799                       # === Interface virtual de la VLAN ===
+ ip address 10.10.17.58 255.255.255.248   # === IP de gestión del switch === 
  no shutdown
 exit
 !
-ip default-gateway 10.10.17.60
+ip default-gateway 10.10.17.60            # === Gateway hacia el router R1 ===
 !
-username admin privilege 15 secret Admin123
+username admin privilege 15 secret admin  # === Usuario local con privilegios ===
 !
-line vty 0 4
+line vty 0 4                              # === Configura acceso remoto ===
  transport input ssh
  login local
 exit
 !
-ip domain-name redes.local
+ip domain-name redes.local                # === Necesario para generar claves RSA ===
 !
-crypto key generate rsa modulus 1024
-ip ssh version 2
+crypto key generate rsa modulus 1024      # === Genera claves para SSH ===
+ip ssh version 2                          # === Fuerza uso de SSHv2 ===
 !
-interface ethernet0/0
+interface ethernet0/0                     # === Puerto trunk hacia el router ===
  switchport trunk encapsulation dot1q
  switchport mode trunk
  switchport trunk allowed vlan 1799
 exit
 !
-interface ethernet1/0
+interface ethernet1/0                     # === Puerto access en VLAN 1799 ===
  switchport mode access
  switchport access vlan 1799
 exit
 !
-do wr
+do wr                                     # === Guarda configuración ===
 ```
 
 ---
@@ -129,41 +129,41 @@ do wr
 ```plaintext
 conf t
 !
-hostname SwitchREMOTO
+hostname SwitchREMOTO                     # === Cambia el nombre del dispositivo ===
 !
-vlan 1799
+vlan 1799                                 # === Crea VLAN de gestión ===
  name VLAN_GESTION
 exit
 !
-interface vlan 1799
- ip address 10.10.17.61 255.255.255.248
+interface vlan 1799                       # === Interface virtual de la VLAN ===
+ ip address 10.10.17.61 255.255.255.248   # === IP de gestión del switch ===
  no shutdown
 exit
 !
-ip default-gateway 10.10.17.60
+ip default-gateway 10.10.17.60            # === Gateway hacia el router R1 ===
 !
-username admin privilege 15 secret Admin123
+username admin privilege 15 secret admin  # === Usuario local con privilegios ===
 !
-line vty 0 4
+line vty 0 4                              # === Configura acceso remoto ===
  transport input ssh
  login local
 exit
 !
-ip domain-name redes.local
+ip domain-name redes.local                # === Necesario para generar claves RSA ===
 !
-crypto key generate rsa modulus 1024
-ip ssh version 2
+crypto key generate rsa modulus 1024      # === Genera claves para SSH ===
+ip ssh version 2                          # === Fuerza uso de SSHv2 ===
 !
-interface ethernet0/0
+interface ethernet0/0                     # === Puerto trunk hacia el router ===
  switchport trunk encapsulation dot1q
  switchport mode trunk
  switchport trunk allowed vlan 1799
 exit
 !
-interface ethernet1/0
+interface ethernet1/0                     # === Puerto access en VLAN 1799 ===
  switchport mode access
  switchport access vlan 1799
 exit
 !
-do wr
+do wr                                     # === Guarda configuración ===
 ```
