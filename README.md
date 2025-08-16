@@ -23,7 +23,6 @@ Este repositorio contiene la documentación y los scripts para el despliegue de 
 
 Los scripts de automatización se encuentran en la carpeta [`/scripts`](../scripts).
 
----
 
 ## Autoría
 
