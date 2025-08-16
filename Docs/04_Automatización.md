@@ -1,0 +1,1 @@
+ # Explicación e instalación script de automatización
