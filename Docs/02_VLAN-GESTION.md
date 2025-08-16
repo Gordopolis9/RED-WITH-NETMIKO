@@ -1,19 +1,27 @@
 # Configuración de la VLAN-GESTION
 
 Este documento describe la **configuración de la VLAN de gestión (ID 1799)**, que permite la administración remota de los dispositivos de red de forma segura y centralizada.  
-Se detallan las asignaciones de IP por dispositivo, las configuraciones aplicadas en los routers (R1 y R2) y en los switches (SW1 y SW2), así como el host SYSADMIN que forma parte de esta red de gestión.  
+Se detallan las asignaciones de IP por dispositivo, las configuraciones aplicadas en los routers (R1 y R2) y en los switches (SW1 y SW2), así como el host SYSADMIN que forma parte de esta red de gestión.
 
-## Tabla de configuraciónes
+> **Nota:** Las IP de los switches son asignadas a la **interfaz VLAN de gestión**, no a ningún puerto físico. Esto permite administrar el switch sin importar los puertos que estén activos.
 
-| VLAN ID | Nombre           | Dispositivo | Interfaz   | Dirección IP       | Tipo     |
-|---------|-----------------|-------------|------------|--------------------|----------|
-| 1799    | VLAN_GESTION     | SW1 (LOCAL)         | Fa0/1      | N/A                | Access   |
-| 1799    | VLAN_GESTION     | SW1 (LOCAL)         | Fa0/0      | Trunk              | Trunk    |
-| 1799    | VLAN_GESTION     | SW2 (REMOTO)        | Fa0/0      | Trunk              | Trunk    |
-| 1799    | VLAN_GESTION     | R1 (LOCAL)  | ether2     | 10.10.17.59/29     | Routed   |
-| 1799    | VLAN_GESTION-P2P | R1 (LOCAL)  | ether3     | 10.10.17.65/30     | Routed   |
-| 1799    | VLAN_GESTION-P2P | R2 (REMOTO) | ether2     | 10.10.17.66/30     | Routed   |
-| 1799    | VLAN_GESTION     | SYSADMIN    | ens18      | 10.10.17.58/29  | Host     |
+---
+
+## Tabla de configuraciones
+
+| VLAN ID | Nombre           | Dispositivo | Interfaz   | Dirección IP       | Tipo             |
+|:-------:|-----------------|-------------|:----------:|:-----------------:|:----------------:|
+| 1799    | VLAN_GESTION     | SW1 (LOCAL) | Fa0/1      | N/A               | Access           |
+| 1799    | VLAN_GESTION     | SW1 (LOCAL) | Fa0/0      | Trunk             | Trunk            |
+| 1799    | VLAN_GESTION     | SW2 (REMOTO)| Fa0/0      | Trunk             | Trunk            |
+| 1799    | VLAN_GESTION     | R1 (LOCAL)  | ether2     | 10.10.17.59/29    | Routed           |
+| 1799    | VLAN_GESTION-P2P | R1 (LOCAL)  | ether3     | 10.10.17.65/30    | Routed           |
+| 1799    | VLAN_GESTION-P2P | R2 (REMOTO) | ether2     | 10.10.17.66/30    | Routed           |
+| 1799    | VLAN_GESTION     | SYSADMIN    | e0         | 10.10.17.58/29    | Host             |
+| 1799    | VLAN_GESTION     | SW1 (LOCAL) | VLAN1799   | 10.10.17.58/29    | Management IP    |
+| 1799    | VLAN_GESTION     | SW2 (REMOTO)| VLAN1799   | 10.10.17.61/29    | Management IP    |
+
+---
 
 ## Configuración de Routers R1 y R2
 
