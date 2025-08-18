@@ -1,5 +1,5 @@
 from netmiko import ConnectHandler
-
+import sys
 # Lista de dispositivos
 devices = [
     {
@@ -45,7 +45,7 @@ commands = {
 def menu_dispositivos():
     print("\nSeleccione un dispositivo para conectarse:")
     for idx, device in enumerate(devices, 1):
-        print(f"{idx}. {device['name']} ({device['host']})")
+        print(f"{idx}. {name} ({dev['host']})")
     print("0. Salir")
     choice = input("Ingrese el número: ")
     return choice
@@ -65,12 +65,12 @@ def main():
         # Filtrar solo los parámetros que acepta ConnectHandler
         connect_params = {k: v for k, v in device.items() if k in ['device_type', 'host', 'username', 'password', 'secret', 'port']}
 
-        print(f"\n🔗 Conectando a {device['name']} ({device['host']})...")
+        print(f"\n🔗 Conectando a {name} ({dev['host']})...")
         net_connect = ConnectHandler(**connect_params)
-        if device['device_type'] == 'cisco_ios':
+        if dev['device_type'] == 'cisco_ios':
             net_connect.enable()
-        output = net_connect.send_command(commands[device['device_type']])
-        print(f"📡 Salida de {device['name']}:\n{output}")
+        output = net_connect.send_command(commands[dev['device_type']])
+        print(f"📡 Salida de {name}:\n{output}")
         net_connect.disconnect()
 
 if __name__ == "__main__":
