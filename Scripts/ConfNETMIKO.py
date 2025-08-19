@@ -44,7 +44,7 @@ def create_SW_vlans(connection,name):
   
     for vlan in vlans:
         # Comprobar si la VLAN ya existe
-        if vlan['VLAN_NAME'] != 'VLAN_GESTION':
+        if vlan['VLAN_NAME'] == 'VLAN_GESTION':
             continue
         output = connection.send_command(f"show vlan brief | include {vlan['VLAN_ID']}")
         if str(vlan['VLAN_ID']) not in output:
@@ -155,7 +155,7 @@ def r1_local():
             vlan_name = vlan['VLAN_NAME']
             vlan_id = vlan['VLAN_ID']
             gateway = vlan['VLAN_GATEWAY'] if 'VLAN_GATEWAY' in vlan else vlan['VLAN_Address']
-            if vlan_name != 'VLAN_GESTION':
+            if vlan_name == 'VLAN_GESTION':
                 continue
            
 
@@ -182,7 +182,7 @@ def r1_local():
         for vlan in vlans:
             vlan_name = vlan['VLAN_NAME']
             gateway = vlan['VLAN_GATEWAY']
-            if vlan_name == 'VLAN_GESTION' or vlan_name == 'VLAN_VISITANTES':
+            if vlan_name != 'VLAN_GESTION' or vlan_name != 'VLAN_VISITANTES':
                 continue
             address = ipaddress.ip_network(gateway,strict=False)
             output_filter = connection.send_command(f"/ip firewall filter print where src-address={address}")       
