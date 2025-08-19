@@ -1,5 +1,6 @@
 from netmiko import ConnectHandler
 import ipaddress
+import os
 
 devices = {
     'SW1-LOCAL':{
@@ -219,6 +220,8 @@ def r1_local():
 
 def test_connections():
     """Probar SSH con todos los dispositivos"""
+    os.system('clear')
+    print('\n<-- Test conexiones SSH -->')
     for name, dev in devices.items():
         try:
             conn = ConnectHandler(**dev)
@@ -226,11 +229,14 @@ def test_connections():
             conn.disconnect()
         except Exception as e:
             print(f"[ERROR] No se pudo conectar a {name} ({dev['host']}) -> {e}")
+    input('\nPresione Enter para continuar...')
+
 
 def configure_network():
     # configurar la red
     while True:
-        print('\n=== Configuración automática de red ===')
+        
+        print('\n<-- Configuración automática de red -->')
         print('1. Ver configuracion preestablecida')
         print('2. Iniciar configuración automática')
         print('3. Eliminar configuración existente')
@@ -240,18 +246,25 @@ def configure_network():
 
         match choice:
             case '1':
-                print('\n === Configuración Preestablecida ===')
+                os.system('clear')
+                print('\n<-- Configuración Preestablecida -->')
                 print('\n🔗 Vlans')
                 for vlan in vlans:
                     print(f"| VLAN: {vlan['VLAN_NAME']}, ID: {vlan['VLAN_ID']}, Gateway: {vlan['VLAN_GATEWAY'] if 'VLAN_GATEWAY' in vlan else vlan['VLAN_Address']}")
                 print('\n Dispositivos:')
                 for name,dev in devices.items():
                     print(f"| {name} ({dev['device_type']}) - {dev['host']} - username: {dev['username']}, password: {dev['password']}, secret/port: {dev['secret'] if 'secret' in dev else dev['port']}")
+                input('\nPresione Enter para continuar...')
+                os.system('clear')
             case '2':
+                os.system('clear')
                 print('\n🔧 Iniciando configuración automática de red...')
                 sw1_local()
                 sw2_remoto()
                 r1_local()
+                print('\n✅ Configuración automática completada.')
+                input('\nPresione Enter para continuar...')
+                os.system('clear')
             case '3':
                 print('\n🧹 Eliminando configuración existente... (No Implementado)')
                 # Aquí se implementara la logica para eliminar la configuracion existente de la red 
@@ -275,6 +288,7 @@ def menu_dispositivos():
 
 def show_config():
     # mostrar configuraciones de RED
+    
     commands = {
         'cisco_ios': [
             ('show ip interface brief', "Interfaces"),
@@ -290,6 +304,7 @@ def show_config():
     }
 
     while True:
+        os.system('clear')
         choice = menu_dispositivos()
         if choice == '0':
             print("Saliendo...")
@@ -300,7 +315,7 @@ def show_config():
 
         name = list(devices.keys())[int(choice) - 1]
         dev = devices[name]
-
+        os.system('clear')
         print(f"\n🔗 Conectando a {name} ({dev['host']})...")
         connection = ConnectHandler(**dev)
         if dev['device_type'] == 'cisco_ios':
@@ -308,15 +323,17 @@ def show_config():
 
         print(f"\n📡 Configuración de {name}:\n")
         for cmd, titulo in commands[dev['device_type']]:
-            print(f"\n===== {titulo} ({cmd}) =====")
+            print(f"\n<--== {titulo} ({cmd}) -->==")
             output = connection.send_command(cmd)
             print(output)
 
         connection.disconnect()
+        input('\nPresione Enter para continuar...')
 
 
 def settings_menu():
-    # === Menu de configuraciones ===  
+    # --> Menu de configuraciones -->  
+    os.system('clear')
     def update_device(devices, device_name, key, new_value):
         if device_name in devices and key in devices[device_name]:
             devices[device_name][key] = new_value
@@ -329,7 +346,7 @@ def settings_menu():
         print(f"✅ {vlan['VLAN_NAME']} -> {key} actualizado a: {new_value}")
 
     while True:
-        print('\n === Ajustes ===')
+        print('\n<-- Ajustes -->')
         print('1. Configurar dispositivos')
         print('2. Configurar VLANs')
         print('0. Volver')
@@ -338,7 +355,8 @@ def settings_menu():
 
         match choice:
             case '1':
-                print('\n === Cinfigurar Dispositivos ===')
+                os.system('clear')
+                print('\n<-- Cinfigurar Dispositivos -->')
                 opcion_dispositivo = menu_dispositivos()
                 if opcion_dispositivo == '0':
                     print("Saliendo...")
@@ -346,11 +364,12 @@ def settings_menu():
                 if not opcion_dispositivo.isdigit() or int(opcion_dispositivo) < 1 or int(opcion_dispositivo) > len(devices):
                     print("Opción inválida, intente nuevamente.")
                     continue 
-
+                
                 name = list(devices.keys())[int(opcion_dispositivo) - 1]
                 dev = devices[name]
+                os.system('clear')
                 while True: 
-                    print(f"\n === Configuración de {name} ===")   
+                    print(f"\n<-- Configuración de {name} -->")   
                     print('1. Host (IP de gestión)')
                     print('2. Username (Usuario)')
                     print('3. Password (Contraseña)')
@@ -364,37 +383,52 @@ def settings_menu():
 
                     match choice:
                         case '1':
+                            os.system('clear')
                             new_host = input(f"Ingrese nuevo Host (IP de gestión) para {name} (actual: {dev['host']}): ")
                             old_host = dev['host']
                             update_device(devices, name, 'host', new_host)
                             print(f"Host actualizado: {old_host} -> {new_host}")
+                            input('\nPresione Enter para continuar...')
+                            os.system('clear')
                         case '2':
+                            os.system('clear')
                             new_username = input(f"Ingrese nuevo Username (Usuario) para {name} (actual: {dev['username']}): ")
                             old_username = dev['username']
                             update_device(devices, name, 'username', new_username)
                             print(f"Username actualizado: {old_username} -> {new_username}")
+                            input('\nPresione Enter para continuar...')
+                            os.system('clear')
                         case '3':
+                            os.system('clear')
                             new_password = input(f"Ingrese nuevo Password (Contraseña) para {name} (actual: {dev['password']}): ")
                             old_password = dev['password']
                             update_device(devices, name, 'password', new_password)
                             print(f"Password actualizado: {old_password} -> {new_password}")
+                            input('\nPresione Enter para continuar...')
+                            os.system('clear')
                         case '4':
                             if dev['device_type'] == 'cisco_ios':
+                                os.system('clear')
                                 new_secret = input(f"Ingrese nuevo Secret para {name} (actual: {dev['secret']}): ")
                                 old_secret = dev['secret']
                                 update_device(devices, name, 'secret', new_secret)
                                 print(f"Secret actualizado: {old_secret} -> {new_secret}")
+                                input('\nPresione Enter para continuar...')
+                                os.system('clear')
                             else:
+                                os.system('clear')
                                 new_port = input(f"Ingrese nuevo Port para {name} (actual: {dev['port']}): ")
                                 old_port = dev['port']
                                 update_device(devices, name, 'port', new_port)
                                 print(f"Port actualizado: {old_port} -> {new_port}")
+                                input('\nPresione Enter para continuar...')
+                                os.system('clear')
                         case '0':
                             break
                         case _:
                             print('Opción inválida, intente nuevamente.')
             case '2':
-               
+                os.system('clear')
                 def menu_vlans():
                     print('\n Seleccione una VLAN para configurar: ')
                     for idx, vlan in enumerate(vlans, 1):
@@ -412,9 +446,9 @@ def settings_menu():
                     continue 
 
                 vlan = vlans[int(choice_vlan) - 1]
-
+                os.system('clear')
                 while True:
-                    print(f"\n === Configuración de {vlan['VLAN_NAME']} ===")
+                    print(f"\n<-- Configuración de {vlan['VLAN_NAME']} -->")
                     print('1. VLAN ID')
                     if vlan['VLAN_NAME'] == 'VLAN_GESTION':
                         print('2. VLAN Address')
@@ -426,21 +460,30 @@ def settings_menu():
 
                     match choice:
                         case '1':
+                            os.system('clear')
                             new_vlan_id = input(f"Ingrese nuevo VLAN ID para {vlan['VLAN_NAME']} (actual: {vlan['VLAN_ID']}): ")
                             old_vlan_id = vlan['VLAN_ID']
                             update_vlan(vlan, 'VLAN_ID', new_vlan_id)
                             print(f"VLAN ID actualizado: {old_vlan_id} -> {new_vlan_id}")
+                            input('\nPresione Enter para continuar...')
+                            os.system('clear')
                         case '2':
                             if vlan['VLAN_NAME'] == 'VLAN_GESTION':
+                                os.system('clear')
                                 new_vlan_address = input(f"Ingrese nueva VLAN Address para {vlan['VLAN_NAME']} (actual: {vlan.get('VLAN_Address', 'No configurado')}): ")
                                 old_vlan_address = vlan.get('VLAN_Address', 'No configurado')
                                 update_vlan(vlan, 'VLAN_Address', new_vlan_address)
                                 print(f"VLAN Address actualizado: {old_vlan_address} -> {new_vlan_address}")
+                                input('\nPresione Enter para continuar...')
+                                os.system('clear')
                             else:
+                                os.system('clear')
                                 new_vlan_gateway = input(f"Ingrese nuevo VLAN Gateway para {vlan['VLAN_NAME']} (actual: {vlan['VLAN_GATEWAY']}): ")
                                 old_vlan_gateway = vlan['VLAN_GATEWAY']
                                 update_vlan(vlan, 'VLAN_GATEWAY', new_vlan_gateway)
                                 print(f"VLAN Gateway actualizado: {old_vlan_gateway} -> {new_vlan_gateway}")
+                                input('\nPresione Enter para continuar...')
+                                os.system('clear')
                         case '0':
                             break
                         case _:
@@ -454,8 +497,9 @@ def settings_menu():
    
 
 def main_menu():
+    os.system('clear')
     while True:
-        print("\n=== MENU PRINCIPAL ===")
+        print("\n<-- MENU PRINCIPAL -->")
         print("1. Testear conexiones SSH")
         print("2. Mostrar configuraciones")
         print("3. Configurar red (Automatico)")
