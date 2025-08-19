@@ -234,6 +234,7 @@ def test_connections():
 
 def configure_network():
     # configurar la red
+    os.system('clear')
     while True:
         
         print('\n<-- Configuración automática de red -->')
@@ -387,7 +388,7 @@ def settings_menu():
                             new_host = input(f"Ingrese nuevo Host (IP de gestión) para {name} (actual: {dev['host']}): ")
                             old_host = dev['host']
                             update_device(devices, name, 'host', new_host)
-                            print(f"Host actualizado: {old_host} -> {new_host}")
+                          
                             input('\nPresione Enter para continuar...')
                             os.system('clear')
                         case '2':
@@ -395,7 +396,7 @@ def settings_menu():
                             new_username = input(f"Ingrese nuevo Username (Usuario) para {name} (actual: {dev['username']}): ")
                             old_username = dev['username']
                             update_device(devices, name, 'username', new_username)
-                            print(f"Username actualizado: {old_username} -> {new_username}")
+                            
                             input('\nPresione Enter para continuar...')
                             os.system('clear')
                         case '3':
@@ -403,7 +404,7 @@ def settings_menu():
                             new_password = input(f"Ingrese nuevo Password (Contraseña) para {name} (actual: {dev['password']}): ")
                             old_password = dev['password']
                             update_device(devices, name, 'password', new_password)
-                            print(f"Password actualizado: {old_password} -> {new_password}")
+                           
                             input('\nPresione Enter para continuar...')
                             os.system('clear')
                         case '4':
@@ -412,7 +413,7 @@ def settings_menu():
                                 new_secret = input(f"Ingrese nuevo Secret para {name} (actual: {dev['secret']}): ")
                                 old_secret = dev['secret']
                                 update_device(devices, name, 'secret', new_secret)
-                                print(f"Secret actualizado: {old_secret} -> {new_secret}")
+                               
                                 input('\nPresione Enter para continuar...')
                                 os.system('clear')
                             else:
@@ -420,12 +421,14 @@ def settings_menu():
                                 new_port = input(f"Ingrese nuevo Port para {name} (actual: {dev['port']}): ")
                                 old_port = dev['port']
                                 update_device(devices, name, 'port', new_port)
-                                print(f"Port actualizado: {old_port} -> {new_port}")
+                                
                                 input('\nPresione Enter para continuar...')
                                 os.system('clear')
                         case '0':
+                            os.system('clear')
                             break
                         case _:
+                            os.system('clear')
                             print('Opción inválida, intente nuevamente.')
             case '2':
                 os.system('clear')
@@ -497,8 +500,9 @@ def settings_menu():
    
 
 def main_menu():
-    os.system('clear')
+    
     while True:
+        os.system('clear')
         print("\n<-- MENU PRINCIPAL -->")
         print("1. Testear conexiones SSH")
         print("2. Mostrar configuraciones")
