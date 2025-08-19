@@ -60,9 +60,7 @@ def create_SW_vlans(connection,name):
 def sw1_local():
     dev = devices['SW1-LOCAL']
     name = 'SW1-LOCAL'
-    vlans_ids = []
-    for vlan in vlans:
-        vlans_ids.append(vlan['VLAN_ID'])
+    vlans_ids = {vlan['VLAN_NAME']:vlan['VLAN_ID']for vlan in vlans}
     print(f"\n🔗 Conectando a {name} ({dev['host']})...")
     connection = ConnectHandler(**dev)
     connection.enable()
@@ -91,8 +89,11 @@ def sw1_local():
     
     commands = [
         f"interface {trunk_port}",
+        "switchport trunk encapsulation dot1q",
         "switchport mode trunk",
-        f"switchport trunk allowed vlan {vlans_ids[0]},{vlans_ids[1]},{vlans_ids[2]},{vlans_ids[3]}",      
+        f"switchport trunk allowed vlan {vlans_ids['VLAN_GESTION']},{vlans_ids['VLAN_TECNICA']},{vlans_ids['VLAN_VENTAS']},{vlans_ids['VLAN_VISITANTES']}",
+        "switchport trunk native vlan 289"
+        "duplex full"
         "no shutdown",
         
     ]
@@ -105,9 +106,7 @@ def sw1_local():
 def sw2_remoto():
     dev = devices['SW2-REMOTO']
     name = 'SW2-REMOTO'
-    vlans_ids = []
-    for vlan in vlans:
-        vlans_ids.append(vlan['VLAN_ID'])
+    vlans_ids = {vlan['VLAN_NAME']:vlan['VLAN_ID']for vlan in vlans}
     print(f"\n🔗 Conectando a {name} ({dev['host']})...")
     connection = ConnectHandler(**dev)
     connection.enable()
@@ -137,8 +136,11 @@ def sw2_remoto():
     
     commands = [
         f"interface {trunk_port}",
+        "switchport trunk encapsulation dot1q",
         "switchport mode trunk",
-        f"switchport trunk allowed vlan {vlans_ids[0]},{vlans_ids[1]},{vlans_ids[2]},{vlans_ids[3]}",
+        f"switchport trunk allowed vlan {vlans_ids['VLAN_GESTION']},{vlans_ids['VLAN_TECNICA']},{vlans_ids['VLAN_VENTAS']},{vlans_ids['VLAN_VISITANTES']}",
+        "switchport trunk native vlan 289"
+        "duplex full"
         "no shutdown",
         
     ]
