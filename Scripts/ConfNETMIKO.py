@@ -92,9 +92,9 @@ def sw1_local():
         "switchport trunk encapsulation dot1q",
         "switchport mode trunk",
         f"switchport trunk allowed vlan {vlans_ids['VLAN_GESTION']},{vlans_ids['VLAN_TECNICA']},{vlans_ids['VLAN_VENTAS']},{vlans_ids['VLAN_VISITANTES']}",
-        "switchport trunk native vlan 289"
-        "duplex full"
-        "no shutdown",
+        "switchport trunk native vlan 289",
+        "duplex full",
+        "no shutdown"
         
     ]
     connection.send_config_set(commands)
@@ -139,9 +139,9 @@ def sw2_remoto():
         "switchport trunk encapsulation dot1q",
         "switchport mode trunk",
         f"switchport trunk allowed vlan {vlans_ids['VLAN_GESTION']},{vlans_ids['VLAN_TECNICA']},{vlans_ids['VLAN_VENTAS']},{vlans_ids['VLAN_VISITANTES']}",
-        "switchport trunk native vlan 289"
-        "duplex full"
-        "no shutdown",
+        "switchport trunk native vlan 289",
+        "duplex full",
+        "no shutdown"
         
     ]
     connection.send_config_set(commands)
