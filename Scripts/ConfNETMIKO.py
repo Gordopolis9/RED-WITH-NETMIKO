@@ -208,7 +208,7 @@ def r1_local():
             if  str(address) in output_filter:
                 print(f"Regla de firewall ya existe en {name} para {address}")
             else:
-                cmd_firewall = f"/ip firewall filter add chain=forward src-address={address} action=drop comment='Bloqueo conexión al exterior para {vlan_name}'"
+                cmd_firewall = f'/ip firewall filter add chain=forward src-address={address} action=drop comment="Bloqueo conexión al exterior para {vlan_name}"'
                 connection.send_command(cmd_firewall)
                 print(f"Regla de firewall creada en {name} para {address}")
     
