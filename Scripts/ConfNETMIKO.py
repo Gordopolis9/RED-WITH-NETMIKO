@@ -189,7 +189,7 @@ def r1_local():
                 print(f"Regla de firewall ya existe en {name} para {address}")
             else:
                 cmd_firewall = f"/ip firewall filter add chain=forward src-address={address} action=drop comment='Bloqueo conexión al exterior para {vlan_name}'"
-                connection.send_config_set(cmd_firewall)
+                connection.send_config_set([cmd_firewall])
                 print(f"Regla de firewall creada en {name} para {address}")
     
     def dhcp_server():
@@ -222,7 +222,7 @@ def test_connections():
     for name, dev in devices.items():
         try:
             conn = ConnectHandler(**dev)
-            print(f"[OK] Conectado a {name} ({dev['host']})")
+            print(f"[OK] Conexión a {name} ({dev['host']})")
             conn.disconnect()
         except Exception as e:
             print(f"[ERROR] No se pudo conectar a {name} ({dev['host']}) -> {e}")
@@ -243,7 +243,7 @@ def configure_network():
                 print('\n === Configuración Preestablecida ===')
                 print('\n🔗 Vlans')
                 for vlan in vlans:
-                    print(f"| VLAN: {vlan['VLAN_NAME']}, ID: {vlan['VLAN_ID']}, Gateway: {vlan['VLAN_GATEWAY']}")
+                    print(f"| VLAN: {vlan['VLAN_NAME']}, ID: {vlan['VLAN_ID']}, Gateway: {vlan['VLAN_GATEWAY'] if 'VLAN_GATEWAT' in vlan else vlan['VLAN_Address']}")
                 print('\n Dispositivos:')
                 for name,dev in devices.items():
                     print(f"| {name} ({dev['device_type']}) - {dev['host']} - username: {dev['username']}, password: {dev['password']}, secret/port: {dev['secret'] if 'secret' in dev else dev['port']}")
@@ -276,9 +276,19 @@ def menu_dispositivos():
 def show_config():
     # mostrar configuraciones de RED
     commands = {
-        'cisco_ios': ['show ip interface brief', 'show vlan brief'],
-        'mikrotik_routeros': ['/interface print', '/ip address print', '/ip firewall filter print','/ip dhcp-server print','/ip route print']
+        'cisco_ios': [
+            ('show ip interface brief', "Interfaces"),
+            ('show vlan brief', "VLANs")
+        ],
+        'mikrotik_routeros': [
+            ('/interface print', "Interfaces"),
+            ('/ip address print', "Direcciones IP"),
+            ('/ip firewall filter print', "Reglas de Firewall"),
+            ('/ip dhcp-server print', "DHCP Server"),
+            ('/ip route print', "Tabla de Rutas")
+        ]
     }
+
     while True:
         choice = menu_dispositivos()
         if choice == '0':
@@ -288,7 +298,6 @@ def show_config():
             print("Opción inválida, intente nuevamente.")
             continue
 
-       
         name = list(devices.keys())[int(choice) - 1]
         dev = devices[name]
 
@@ -296,13 +305,15 @@ def show_config():
         connection = ConnectHandler(**dev)
         if dev['device_type'] == 'cisco_ios':
             connection.enable()
-        print(f"📡 Salida de {name}:")
-        for cmd in commands[dev['device_type']]:
+
+        print(f"\n📡 Configuración de {name}:\n")
+        for cmd, titulo in commands[dev['device_type']]:
+            print(f"\n===== {titulo} ({cmd}) =====")
             output = connection.send_command(cmd)
             print(output)
 
-        
         connection.disconnect()
+
 
 def settings_menu():
     # === Menu de configuraciones ===  
@@ -349,7 +360,7 @@ def settings_menu():
                         print('4. Port (MikroTik_RouterOS)')
                     print('0. Volver')
 
-                    choice = input('Seleccione una opci+on: ')
+                    choice = input('Seleccione una opción: ')
 
                     match choice:
                         case '1':
@@ -434,7 +445,11 @@ def settings_menu():
                             break
                         case _:
                             print('Opción inválida, intente nuevamente.')
-                
+            case '0':
+                break
+            case _:
+                print('Opción inválida, intente nuevamente.')
+        
 
    
 
