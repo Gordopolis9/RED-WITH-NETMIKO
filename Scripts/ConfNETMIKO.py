@@ -243,7 +243,7 @@ def configure_network():
                 print('\n === Configuración Preestablecida ===')
                 print('\n🔗 Vlans')
                 for vlan in vlans:
-                    print(f"| VLAN: {vlan['VLAN_NAME']}, ID: {vlan['VLAN_ID']}, Gateway: {vlan['VLAN_GATEWAY'] if 'VLAN_GATEWAT' in vlan else vlan['VLAN_Address']}")
+                    print(f"| VLAN: {vlan['VLAN_NAME']}, ID: {vlan['VLAN_ID']}, Gateway: {vlan['VLAN_GATEWAY'] if 'VLAN_GATEWAY' in vlan else vlan['VLAN_Address']}")
                 print('\n Dispositivos:')
                 for name,dev in devices.items():
                     print(f"| {name} ({dev['device_type']}) - {dev['host']} - username: {dev['username']}, password: {dev['password']}, secret/port: {dev['secret'] if 'secret' in dev else dev['port']}")
