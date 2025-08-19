@@ -182,7 +182,7 @@ def r1_local():
         for vlan in vlans:
             vlan_name = vlan['VLAN_NAME']
             gateway = vlan['VLAN_GATEWAY'] if 'VLAN_GATEWAY' in vlan else vlan['VLAN_Address']
-            if vlan_name != 'VLAN_GESTION' or vlan_name != 'VLAN_VISITANTES':
+            if vlan_name == 'VLAN_VENTAS' or vlan_name == 'VLAN_TECNICA':
                 continue
             address = ipaddress.ip_network(gateway,strict=False)
             output_filter = connection.send_command(f"/ip firewall filter print where src-address={address}")       
