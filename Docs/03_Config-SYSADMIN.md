@@ -117,7 +117,7 @@ wget https://raw.githubusercontent.com/Gordopolis9/RED-WITH-NETMIKO/master/Scrip
 Ejecutar el archivo Python:
 
 ```bash
-python3 ConfNETMIKOt.py
+python3 ConfNETMIKO.py
 ```
 Luego en el menu seleccione la opción 1. Testear conexiones SSH 
 > Esto verifica el acceso a los dispositivos por SSH.
