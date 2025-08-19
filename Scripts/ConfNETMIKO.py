@@ -60,7 +60,9 @@ def create_SW_vlans(connection,name):
 def sw1_local():
     dev = devices['SW1-LOCAL']
     name = 'SW1-LOCAL'
-    vlans_ids = {vlan['VLAN_NAME']:vlan['VLAN_ID']for vlan in vlans}
+    vlans_ids = []
+    for vlan in vlans:
+        vlans_ids.append(vlan['VLAN_ID'])
     print(f"\n🔗 Conectando a {name} ({dev['host']})...")
     connection = ConnectHandler(**dev)
     connection.enable()
@@ -90,7 +92,7 @@ def sw1_local():
     commands = [
         f"interface {trunk_port}",
         "switchport mode trunk",
-        f"switchport trunk allowed vlan {vlans_ids['VLAN_GESTION']},{vlans_ids['VLAN_TECNICA']},{vlans_ids['VLAN_VENTAS']},{vlans_ids['VLAN_VISITANTES']}",
+        f"switchport trunk allowed vlan {vlans_ids[0]},{vlans_ids[1]},{vlans_ids[2]},{vlans_ids[3]}",      
         "no shutdown",
         
     ]
@@ -103,7 +105,9 @@ def sw1_local():
 def sw2_remoto():
     dev = devices['SW2-REMOTO']
     name = 'SW2-REMOTO'
-    vlans_ids = {vlan['VLAN_NAME']:vlan['VLAN_ID']for vlan in vlans}
+    vlans_ids = []
+    for vlan in vlans:
+        vlans_ids.append(vlan['VLAN_ID'])
     print(f"\n🔗 Conectando a {name} ({dev['host']})...")
     connection = ConnectHandler(**dev)
     connection.enable()
@@ -134,7 +138,7 @@ def sw2_remoto():
     commands = [
         f"interface {trunk_port}",
         "switchport mode trunk",
-        f"switchport trunk allowed vlan {vlans_ids['VLAN_GESTION']},{vlans_ids['VLAN_TECNICA']},{vlans_ids['VLAN_VENTAS']},{vlans_ids['VLAN_VISITANTES']}",
+        f"switchport trunk allowed vlan {vlans_ids[0]},{vlans_ids[1]},{vlans_ids[2]},{vlans_ids[3]}",
         "no shutdown",
         
     ]
@@ -190,7 +194,7 @@ def r1_local():
                 print(f"Regla de firewall ya existe en {name} para {address}")
             else:
                 cmd_firewall = f"/ip firewall filter add chain=forward src-address={address} action=drop comment='Bloqueo conexión al exterior para {vlan_name}'"
-                connection.send_config_set([cmd_firewall])
+                connection.send_command(cmd_firewall)
                 print(f"Regla de firewall creada en {name} para {address}")
     
     def dhcp_server():
