@@ -85,7 +85,7 @@ def sw1_local():
         print(f"Puerto {port} configurado para VLAN {vlan_id} en {name}.")
 
     # Configurar puerto troncal
-    trunk_port = 'e1/0'
+    trunk_port = 'e0/0'
     
     commands = [
         f"interface {trunk_port}",
