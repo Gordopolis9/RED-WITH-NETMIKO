@@ -154,7 +154,7 @@ def r1_local():
         for vlan in vlans:
             vlan_name = vlan['VLAN_NAME']
             vlan_id = vlan['VLAN_ID']
-            gateway = vlan['VLAN_GATEWAY']
+            gateway = vlan['VLAN_GATEWAY'] if 'VLAN_GATEWAY' in vlan else vlan['VLAN_Address']
             if vlan_name != 'VLAN_GESTION':
                 continue
            
