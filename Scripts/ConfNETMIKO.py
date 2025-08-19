@@ -270,8 +270,10 @@ def configure_network():
                 print('\n🧹 Eliminando configuración existente... (No Implementado)')
                 # Aquí se implementara la logica para eliminar la configuracion existente de la red 
             case '0':
+                os.system('clear')
                 break
             case _:
+                os.system('clear')
                 print('Opción inválida, intente nuevamente.')
     # r2_remoto() # Implementar si es necesario
 
@@ -324,7 +326,7 @@ def show_config():
 
         print(f"\n📡 Configuración de {name}:\n")
         for cmd, titulo in commands[dev['device_type']]:
-            print(f"\n<--== {titulo} ({cmd}) -->==")
+            print(f"\n<-- {titulo} ({cmd}) -->")
             output = connection.send_command(cmd)
             print(output)
 
@@ -488,12 +490,16 @@ def settings_menu():
                                 input('\nPresione Enter para continuar...')
                                 os.system('clear')
                         case '0':
+                            os.system('clear')
                             break
                         case _:
+                            os.system('clear')
                             print('Opción inválida, intente nuevamente.')
             case '0':
+                os.system('clear')
                 break
             case _:
+                os.system('clear')
                 print('Opción inválida, intente nuevamente.')
         
 
