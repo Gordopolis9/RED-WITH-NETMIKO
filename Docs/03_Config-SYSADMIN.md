@@ -101,7 +101,7 @@ sudo apt install wget
 Usar `wget` para obtener el archivo en formato RAW:
 
 ```bash
-wget https://raw.githubusercontent.com/Gordopolis9/RED-WITH-NETMIKO/master/test_netmiko_connect.py
+wget https://raw.githubusercontent.com/Gordopolis9/RED-WITH-NETMIKO/master/Scripts/ConfNETMIKO.py
 ```
 
 **Cómo obtener el enlace RAW:**
@@ -117,10 +117,10 @@ wget https://raw.githubusercontent.com/Gordopolis9/RED-WITH-NETMIKO/master/test_
 Ejecutar el archivo Python:
 
 ```bash
-python3 test_netmiko_connect.py
+python3 ConfNETMIKOt.py
 ```
-
-> Este script se conecta por SSH a tus routers y switches para ejecutar comandos de prueba.
+Luego en el menu seleccione la opción 1. Testear conexiones SSH 
+> Esto verifica el acceso a los dispositivos por SSH.
 
 ---
 
@@ -129,11 +129,11 @@ python3 test_netmiko_connect.py
 Ver contenido del script:
 
 ```bash
-cat test_netmiko_connect.py
+cat ConfNETMIKO.py
 ```
 
 Editar el script:
 
 ```bash
-nano test_netmiko_connect.py
+nano ConfNETMIKO.py
 ```
