@@ -37,7 +37,8 @@ vlans = [
             {'VLAN_NAME' : 'VLAN_VENTAS', 'VLAN_ID' : 280, 'VLAN_GATEWAY' : "10.10.17.1/27" },
             {'VLAN_NAME' : 'VLAN_TECNICA', 'VLAN_ID' : 281, 'VLAN_GATEWAY' : "10.10.17.33/28" },
             {'VLAN_NAME' : 'VLAN_VISITANTES', 'VLAN_ID' : 282, 'VLAN_GATEWAY' : "10.10.17.49/29" },
-            {'VLAN_NAME' : 'VLAN_GESTION', 'VLAN_ID' : 1799, 'VLAN_Address' : "10.10.17.56/29" }
+            {'VLAN_NAME' : 'VLAN_GESTION', 'VLAN_ID' : 1799, 'VLAN_Address' : "10.10.17.56/29" },
+            {'VLAN_NAME' : 'VLAN_NATIVA', 'VLAN_ID': 289}
         ]
 
 def create_SW_vlans(connection,name):
@@ -92,7 +93,7 @@ def sw1_local():
         "switchport trunk encapsulation dot1q",
         "switchport mode trunk",
         f"switchport trunk allowed vlan {vlans_ids['VLAN_GESTION']},{vlans_ids['VLAN_TECNICA']},{vlans_ids['VLAN_VENTAS']},{vlans_ids['VLAN_VISITANTES']}",
-        "switchport trunk native vlan 289",
+        f"switchport trunk native vlan {vlans_ids['VLAN_NATIVA']}",
         "duplex full",
         "no shutdown"
         
@@ -139,7 +140,7 @@ def sw2_remoto():
         "switchport trunk encapsulation dot1q",
         "switchport mode trunk",
         f"switchport trunk allowed vlan {vlans_ids['VLAN_GESTION']},{vlans_ids['VLAN_TECNICA']},{vlans_ids['VLAN_VENTAS']},{vlans_ids['VLAN_VISITANTES']}",
-        "switchport trunk native vlan 289",
+        f"switchport trunk native vlan {vlans_ids['VLAN_NATIVA']}",
         "duplex full",
         "no shutdown"
         
@@ -160,6 +161,16 @@ def r1_local():
         for vlan in vlans:
             vlan_name = vlan['VLAN_NAME']
             vlan_id = vlan['VLAN_ID']
+            if vlan_name == 'VLAN_NATIVA':
+                cmd_vlan = f"/interface vlan add name={vlan_name} vlan-id={vlan_id} interface=ether2"
+
+                output = connection.send_command(f"/interface vlan print where name={vlan_name}")
+                if vlan_name in output:
+                    print(f"VLAN {vlan_id} ya existía en {name}.")
+                else:
+                    connection.send_config_set([cmd_vlan])
+                    print(f"VLAN {vlan_id} creada en {name}.")
+                continue
             gateway = vlan['VLAN_GATEWAY'] if 'VLAN_GATEWAY' in vlan else vlan['VLAN_Address']
             if vlan_name == 'VLAN_GESTION':
                 continue
@@ -187,6 +198,8 @@ def r1_local():
         
         for vlan in vlans:
             vlan_name = vlan['VLAN_NAME']
+            if vlan_name == 'VLAN_NATIVA':
+                continue
             gateway = vlan['VLAN_GATEWAY'] if 'VLAN_GATEWAY' in vlan else vlan['VLAN_Address']
             if vlan_name == 'VLAN_VENTAS' or vlan_name == 'VLAN_TECNICA':
                 continue
@@ -202,6 +215,8 @@ def r1_local():
     def dhcp_server():
         for vlan in vlans:
             vlan_name = vlan['VLAN_NAME']
+            if vlan_name == 'VLAN_NATIVA':
+                continue
             gateway = vlan['VLAN_GATEWAY'] if 'VLAN_GATEWAY' in vlan else vlan['VLAN_Address']
             if vlan_name == 'VLAN_VISITANTES':
                 address = ipaddress.ip_network(gateway,strict=False)
