@@ -11,9 +11,9 @@ Se detallan las asignaciones de IP por dispositivo, las configuraciones aplicada
 
 | VLAN ID | Nombre           | Dispositivo | Interfaz   | Dirección IP       | Tipo             |
 |:-------:|-----------------|-------------|:----------:|:-----------------:|:----------------:|
-| 1799    | VLAN_GESTION     | SW1 (LOCAL) | Fa0/1      | N/A               | Access           |
-| 1799    | VLAN_GESTION     | SW1 (LOCAL) | Fa0/0      | Trunk             | Trunk            |
-| 1799    | VLAN_GESTION     | SW2 (REMOTO)| Fa0/0      | Trunk             | Trunk            |
+| 1799    | VLAN_GESTION     | SW1 (LOCAL) | Fa1/0      | N/A               | Access           |
+| 1799    | VLAN_GESTION     | SW1 (LOCAL) | Fa0/0      | N/A             | Trunk            |
+| 1799    | VLAN_GESTION     | SW2 (REMOTO)| Fa0/0      | N/A             | Trunk            |
 | 1799    | VLAN_GESTION     | R1 (LOCAL)  | ether2     | 10.10.17.59/29    | Routed           |
 | 1799    | VLAN_GESTION-P2P | R1 (LOCAL)  | ether3     | 10.10.17.65/30    | Routed           |
 | 1799    | VLAN_GESTION-P2P | R2 (REMOTO) | ether2     | 10.10.17.66/30    | Routed           |
